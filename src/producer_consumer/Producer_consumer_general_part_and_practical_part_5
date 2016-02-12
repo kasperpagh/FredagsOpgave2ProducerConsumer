@@ -1,0 +1,49 @@
+a) When and why will we use Threads in our programs?
+
+    We use threads for a variety of reasons. Here's a list of a few of the more significant ones:
+- Threads allow us to utilize more CPUs in parallel (more potential calculations at any given time).
+- Threads allow us to make non-blocking applications, since we can both listen for events and preform calculations at the same time (not necessarily using more than ONE core though).
+- It allows for a logical (and practical) separation of certain tasks. For example we can have a separate thread monitor a sensor each instead of having one huge main thread both monitor, 
+react to sensor input. 
+- Sometimes it might simply be quicker and more efficient to separate the app into threads (not always though, due to significant "overhead" in the creation and management of threads by the JVM). 
+
+   
+b) Explain about the Race Condition Problem?
+
+    The race condition problem can arise when multiple threads try to access and change the same variable (in the shared memory-space). For example: two threads each want to
+read and increment the same integer (with a value of say 1). Thread 1 reads the int and increments it and "put" it back again, at the very same (almost) time thread2 tries to do the same, and also 
+reads it as a 1.
+The result is that both reads the integer as 1, and increments it to 2. but instead of the result being 3, it ends up being 2.
+
+The solution to this problem is by either using locks (so that only one thread can access the locked memory, at any given time). Alternatively one can declare the variable in question 
+as either "synchronized" or "volatile".
+
+c) Explain about the Producer/Consumer-problem and how to solve it in modern Java Programs?
+    
+    Producer consumer problems arise when one or more threads produce data for a shared buffer and one or more threads consumes said data.  
+but what if it takes more time to consume than to produce, then a situation in which the buffer is full may happen (or the other way around, with the buffer being empty and the consumer
+still trying to read). 
+The by far easiest solution to this problem in java is to use an implementation of the blockingQue interface as your buffer, which is made to be thread safe, 
+and overall solves the problem all by it's lonesome.
+
+
+Answer to practical part, no. 5)
+
+The following is the measurements that i got for execution time (only measuring the lifetime of the producer threads).
+
+1 thread(s)    2 thread(s)  3 thread(s) 4 thread(s)
+____________________________________________________________________ 
+
+    2,299 s      2,22 s         2,215 s      2,206 s
+    2,191 s      2,155 s        2,2 s        2,214 s
+    2,171 s      2,479 s        2,203 s      2,225 s
+    2,215 s      2,212 s        2,203 s      2,207 s
+    2.217 s      2.17 s         2.289 s      2,205 s
+---------------------------------------------------------------------
+average:
+    2,219 s      2,242 s        2,223 s      2,211 s
+
+All in all the times look rather much alike for my PC (assuming i didn't make a mistake, which is all too likely).
+In my eyes these numbers are too similar to draw any meaningful conclusions. But in general for any given task you want to preform, there
+is a "sweet spot" where the advantages of threads and their overhead balances out in the favor of efficiency. the placement of this spot, is obviously hugely dependent
+on both the nature of the task to preform and the system that's to preform it. 
